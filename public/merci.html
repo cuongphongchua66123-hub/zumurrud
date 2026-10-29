@@ -1,20 +1,26 @@
 <!DOCTYPE html>
-<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Merci – Zumurrud</title>
-<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Spectral:wght@300;400&family=Caveat:wght@500&display=swap" rel="stylesheet">
+<html lang="fr" data-title-key="thanks_title"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zumurrud</title>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Spectral:wght@300;400&family=Caveat:wght@500&family=Amiri:wght@400;700&family=Aref+Ruqaa&display=swap" rel="stylesheet">
 <style>
-body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0E3328;color:#EDEBDD;font-family:Spectral,Georgia,serif;font-weight:300;font-size:1.15rem;line-height:1.7;text-align:center;padding:2rem}
+:root{--display:Marcellus,Georgia,serif;--body:Spectral,Georgia,serif;--hand:Caveat,cursive}
+html[lang="ar"]{--display:Amiri,serif;--body:Amiri,serif;--hand:"Aref Ruqaa",Amiri,serif}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0E3328;color:#EDEBDD;font-family:var(--body);font-weight:300;font-size:1.15rem;line-height:1.75;text-align:center;padding:2rem}
+html[lang="ar"] body{font-weight:400;font-size:1.2rem}
 .card{max-width:520px}
 img{width:110px;margin:0 auto 1.5rem;display:block;filter:drop-shadow(0 20px 22px rgba(0,0,0,.45))}
-h1{font-family:Marcellus,Georgia,serif;font-weight:400;font-size:clamp(2.4rem,7vw,3.6rem);margin:0 0 .5rem;color:#E6C97E}
-.hand{font-family:Caveat,cursive;font-size:1.8rem;color:#E6C97E;margin-top:1.5rem}
-a{display:inline-block;margin-top:2rem;font-family:Marcellus,Georgia,serif;background:#C9A24B;color:#0E3328;padding:.8rem 1.5rem;text-decoration:none;border-radius:2px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,7vw,3.4rem);line-height:1.15;margin:0 0 .75rem;color:#E6C97E}
+.hand{font-family:var(--hand);font-size:1.8rem;color:#E6C97E;margin-top:1.5rem}
+a{display:inline-block;margin-top:2rem;font-family:var(--display);background:#C9A24B;color:#0E3328;padding:.8rem 1.5rem;text-decoration:none;border-radius:2px}
 a:focus-visible{outline:2px solid #E6C97E;outline-offset:3px}
 </style></head>
 <body><div class="card">
-<img src="zumurrud.png" alt="">
-<h1>Merci pour votre commande</h1>
-<p>Votre paiement est confirmé et un e-mail récapitulatif vient de partir. Je prépare votre flacon et il sera expédié sous 48 h.</p>
-<p class="hand">emballé à la main, avec soin ✦</p>
-<a href="/">Retour à la boutique</a>
-</div></body></html>
+<img src="oud-de-larabie-petit.jpg" alt="" style="border-radius:999px 999px 4px 4px;box-shadow:0 0 0 1.5px #C9A24B,0 0 0 8px #0E3328,0 0 0 9px rgba(201,162,75,.5)">
+<h1 data-i18n="thanks_title"></h1>
+<p data-i18n="thanks_p"></p>
+<p class="hand" data-i18n="thanks_hand"></p>
+<a href="/" data-i18n="back"></a>
+</div>
+<script src="i18n.js"></script>
+<script>applyLang(detectLang());</script>
+</body></html>
