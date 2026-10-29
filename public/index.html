@@ -65,7 +65,7 @@ nav a:hover{color:var(--text)}
 .btn[disabled]{opacity:.6;cursor:wait}
 .btn-small{padding:.5rem 1rem;font-size:.95rem}
 @media (max-width:900px){nav a:not(.btn){display:none}}
-@media (max-width:480px){nav .btn-small{display:none}.brand span{display:none}}
+@media (max-width:480px){.brand span{display:none}nav{gap:.5rem}.prefs select{padding:.35rem .3rem;font-size:.85rem}.btn-small{padding:.5rem .8rem}}
 
 /* héros */
 .hero{padding:clamp(3rem,7vw,6rem) 0 4rem;overflow:hidden}
@@ -82,7 +82,9 @@ nav a:hover{color:var(--text)}
 .buy-row{display:flex;align-items:center;gap:1.5rem;margin-top:2.25rem;flex-wrap:wrap}
 .price{font-family:var(--latin-display);font-size:2rem;min-height:1.2em}
 .price small{font-family:var(--body);font-size:.95rem;color:var(--muted);display:block;line-height:1.3}
-.hero-note{margin-top:2.5rem;font-size:1.6rem;transform:rotate(-2deg);display:inline-block}
+.buy-fine{margin-top:.9rem;font-size:.95rem;color:var(--muted)}
+.hero .error{color:#F2B8A8;margin-top:.5rem}
+.hero-note{margin-top:1.5rem;font-size:1.6rem;transform:rotate(-2deg);display:inline-block}
 
 .stage{position:relative;justify-self:center;width:min(300px,100%);padding:18px}
 /* l'arche : la photo est découpée en porte mauresque, entourée d'un double filet doré */
@@ -101,7 +103,7 @@ nav a:hover{color:var(--text)}
 @keyframes rise{to{opacity:1;transform:none}}
 @keyframes settle{to{transform:scale(1)}}
 .label{
-  position:absolute;inset-inline-end:-10%;bottom:12%;
+  position:absolute;inset-inline-end:-10%;top:14%;
   background:var(--kraft);color:var(--ink);padding:.9rem 1.1rem .8rem;width:155px;
   transform:rotate(6deg);box-shadow:0 10px 24px rgba(0,0,0,.35);
   font-family:var(--hand);font-size:1.25rem;line-height:1.15;
@@ -218,7 +220,7 @@ footer a{color:var(--muted)}
         <select id="lang-select" data-i18n-aria="lang_label" aria-label="Langue"></select>
         <select id="currency-select" data-i18n-aria="currency_label" aria-label="Devise"></select>
       </div>
-      <a class="btn btn-small" href="#commander" data-i18n="nav_order">Commander</a>
+      <button class="btn btn-small buy-now" type="button" disabled><span data-i18n="nav_order"></span> <span class="unit-price"></span></button>
     </nav>
   </div>
 </header>
@@ -232,8 +234,10 @@ footer a{color:var(--muted)}
         <p class="lede" data-i18n="hero_lede"></p>
         <div class="buy-row">
           <p class="price"><span class="unit-price"></span> <small data-i18n="price_unit"></small></p>
-          <a class="btn" href="#commander" data-i18n="cta_hero"></a>
+          <button class="btn buy-now" type="button" disabled><span data-i18n="cta_hero"></span></button>
         </div>
+        <p class="buy-fine" data-i18n="buy_fine"></p>
+        <p class="error hero-error" role="alert"></p>
         <p class="hero-note hand" data-i18n="hero_note"></p>
       </div>
       <div class="stage">
@@ -457,10 +461,10 @@ footer a{color:var(--muted)}
 <path d="M746.4 245.7 C746.4 230.9 769.6 230.9 769.6 245.7 Z" fill="#C9A24B" stroke="#E6C97E" stroke-width="1"/>
 <path d="M752.2 239.8 q2.3 -4.4 7.0 -3.7" stroke="#FFF6D8" stroke-width="2" fill="none" opacity=".6" stroke-linecap="round"/>
 <path d="M770.0 266.44 q 14 18 30 34" fill="none" stroke="#D8C49C" stroke-width="1"/>
-<g transform="translate(796.0 296.44) rotate(14)"><path d="M0 0 h46 v24 h-46 l-8 -12 z" fill="#D8C49C"/><circle cx="-1" cy="12" r="2.2" fill="#0E3328"/><text x="21" y="17" font-family="Caveat, cursive" font-size="15" fill="#2A2016" text-anchor="middle">n° 07</text></g>
+<g transform="translate(796.0 296.44) rotate(14)"><path d="M0 0 h46 v24 h-46 l-8 -12 z" fill="#D8C49C"/><circle cx="-1" cy="12" r="2.2" fill="#0E3328"/><text x="21" y="17" font-family="Caveat, cursive" font-size="15" fill="#2A2016" text-anchor="middle">vanille</text></g>
 
 <g transform="translate(878 312) rotate(-8)"><path d="M0 0 h44 v22 h-44 l-8 -11 z" fill="#D8C49C" opacity=".7"/></g>
-<g transform="translate(882 308) rotate(-3)"><path d="M0 0 h44 v22 h-44 l-8 -11 z" fill="#D8C49C"/><text x="22" y="16" font-family="Caveat, cursive" font-size="14" fill="#2A2016" text-anchor="middle">n° 08</text></g>
+<g transform="translate(882 308) rotate(-3)"><path d="M0 0 h44 v22 h-44 l-8 -11 z" fill="#D8C49C"/><text x="22" y="16" font-family="Caveat, cursive" font-size="14" fill="#2A2016" text-anchor="middle">ambre</text></g>
 
 </svg>
       </figure>
@@ -629,31 +633,46 @@ footer a{color:var(--muted)}
     currency = detectCurrency(codes);
     curSel.value = currency;
     render();
+    document.querySelectorAll('.buy-now').forEach(b => b.disabled = false);
   }).catch(() => {
     document.getElementById('erreur').textContent = t.pay_error;
   });
 
-  // ---- paiement ----
-  const bouton = document.getElementById('checkout-button');
-  const erreur = document.getElementById('erreur');
-  bouton.addEventListener('click', async () => {
-    erreur.textContent = '';
-    bouton.disabled = true;
-    bouton.textContent = t.paying;
+  // ---- paiement : un seul chemin pour tous les boutons ----
+  async function startCheckout(btn, quantity, errEl) {
+    if (!currency) return;
+    const original = btn.innerHTML;
+    document.querySelectorAll('.error').forEach(e => e.textContent = '');
+    btn.disabled = true;
+    btn.textContent = t.paying;
     try {
       const response = await fetch('/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity: qte, currency, lang })
+        body: JSON.stringify({ quantity, currency, lang })
       });
       const session = await response.json();
       if (session.url) { window.location.href = session.url; return; }
       throw new Error(session.error || 'no url');
     } catch (e) {
-      erreur.textContent = t.pay_error;
-      bouton.disabled = false;
-      bouton.textContent = t.pay;
+      errEl.textContent = t.pay_error;
+      btn.disabled = false;
+      btn.innerHTML = original;
+      applyLang(lang); render();
     }
+  }
+
+  // Achat en un clic : 1 flacon, directement vers Stripe
+  document.querySelectorAll('.buy-now').forEach(btn => {
+    btn.addEventListener('click', () => startCheckout(btn, 1, document.querySelector('.hero-error')));
+  });
+  // Section commande : avec la quantité choisie
+  const bouton = document.getElementById('checkout-button');
+  bouton.addEventListener('click', () => startCheckout(bouton, qte, document.getElementById('erreur')));
+
+  // Si le visiteur revient de Stripe avec le bouton « retour », réactiver les boutons
+  window.addEventListener('pageshow', e => {
+    if (e.persisted) { document.querySelectorAll('.buy-now,#checkout-button').forEach(b => b.disabled = false); applyLang(lang); render(); }
   });
 </script>
 </body>
